@@ -7,8 +7,8 @@ defmodule Todos.Data.Keeper do
       alias Todos.Data.Keeper.StoryKeeper
       alias Todos.Data.Repo.StoryRepo
 
-      @spec stories :: StoryKeeper
-      defp stories do
+      @spec story_keeper :: StoryKeeper
+      defp story_keeper do
         Application.get_env(:todos, :story_keeper, StoryRepo)
       end
     end

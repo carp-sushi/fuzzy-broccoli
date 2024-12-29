@@ -1,4 +1,4 @@
 defprotocol Todos.Dto do
-  @moduledoc "Create domain objects."
+  @moduledoc "Create data transfer objects."
   def from_schema(struct)
 end

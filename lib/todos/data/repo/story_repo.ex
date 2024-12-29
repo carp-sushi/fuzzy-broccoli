@@ -14,7 +14,7 @@ defmodule Todos.Data.Repo.StoryRepo do
   @max_records Application.compile_env(:todos, :max_records)
 
   @doc "Get a story"
-  def get(id) do
+  def get_story(id) do
     Repo.one(
       from(s in Story,
         where: s.id == ^id and is_nil(s.deleted_at),
@@ -28,7 +28,7 @@ defmodule Todos.Data.Repo.StoryRepo do
   end
 
   @doc "Create a new story."
-  def create(params) do
+  def create_story(params) do
     %Story{}
     |> Story.changeset(params)
     |> Repo.insert()
@@ -39,7 +39,7 @@ defmodule Todos.Data.Repo.StoryRepo do
   end
 
   @doc "Get stories for a blockchain address."
-  def list(blockchain_address) do
+  def list_stories(blockchain_address) do
     Repo.all(
       from(s in Story,
         where: s.blockchain_address == ^blockchain_address and is_nil(s.deleted_at),
@@ -51,9 +51,14 @@ defmodule Todos.Data.Repo.StoryRepo do
   end
 
   @doc "Delete a story."
-  def delete(struct) do
+  def delete_story(struct) do
+    update_story(struct, %{deleted_at: Clock.now()})
+  end
+
+  @doc "Update a story."
+  def update_story(struct, params) do
     struct
-    |> Story.changeset(%{deleted_at: Clock.now()})
+    |> Story.changeset(params)
     |> Repo.update()
     |> case do
       {:error, cs} -> {:error, Error.extract(cs)}
