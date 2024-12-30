@@ -13,6 +13,17 @@ defmodule Todos.Data.Repo.StoryRepo do
   # Sets a maximum on query result size.
   @max_records Application.compile_env(:todos, :max_records)
 
+  @doc "Create a new story."
+  def create_story(params) do
+    %Story{}
+    |> Story.changeset(params)
+    |> Repo.insert()
+    |> case do
+      {:error, cs} -> {:error, Error.extract(cs)}
+      result -> result
+    end
+  end
+
   @doc "Get a story"
   def get_story(id) do
     Repo.one(
@@ -24,17 +35,6 @@ defmodule Todos.Data.Repo.StoryRepo do
     |> case do
       nil -> {:error, "story not found: #{id}"}
       story -> {:ok, story}
-    end
-  end
-
-  @doc "Create a new story."
-  def create_story(params) do
-    %Story{}
-    |> Story.changeset(params)
-    |> Repo.insert()
-    |> case do
-      {:error, cs} -> {:error, Error.extract(cs)}
-      result -> result
     end
   end
 
@@ -50,11 +50,6 @@ defmodule Todos.Data.Repo.StoryRepo do
     )
   end
 
-  @doc "Delete a story."
-  def delete_story(struct) do
-    update_story(struct, %{deleted_at: Clock.now()})
-  end
-
   @doc "Update a story."
   def update_story(struct, params) do
     struct
@@ -64,5 +59,10 @@ defmodule Todos.Data.Repo.StoryRepo do
       {:error, cs} -> {:error, Error.extract(cs)}
       result -> result
     end
+  end
+
+  @doc "Delete a story."
+  def delete_story(struct) do
+    update_story(struct, %{deleted_at: Clock.now()})
   end
 end

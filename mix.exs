@@ -34,7 +34,8 @@ defmodule Todos.MixProject do
       {:ecto_sql, "~> 3.9.2"},
       {:postgrex, "~> 0.16.5"},
       {:plug_cowboy, "~> 2.6.1"},
-      {:jason, "~> 1.4"},
+      # {:jason, "~> 1.4"},
+      {:poison, "~> 6.0"},
       {:ecto_identifier, "~> 0.2.0"}
     ]
   end

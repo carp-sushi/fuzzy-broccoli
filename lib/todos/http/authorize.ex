@@ -1,5 +1,7 @@
 defmodule Todos.Http.Authorize do
-  @moduledoc "Extracts blockchain address header."
+  @moduledoc """
+  Extracts, validates, and assigns blockchain address headers from requests.
+  """
   import Plug.Conn
   alias Todos.Http.{Response, Validate}
   require Logger

@@ -23,6 +23,6 @@ defmodule Todos.Http.Response do
   def send_json(conn, data, status \\ 200) do
     conn
     |> put_resp_content_type("application/json")
-    |> send_resp(status, Jason.encode!(data))
+    |> send_resp(status, Poison.encode!(data))
   end
 end

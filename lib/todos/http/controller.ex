@@ -1,18 +1,19 @@
 defmodule Todos.Http.Controller do
-  @moduledoc "HTTP request handler."
+  @moduledoc """
+  Executes use cases using  execution contexts created from http requests.
+  """
   alias Todos.Http.Response
   require Logger
 
   @doc "Execute a use case and send the result as json."
   def execute(conn, use_case, args \\ %{}) do
-    conn.assigns
-    |> Map.merge(args)
+    Map.merge(args, conn.assigns)
     |> use_case.execute()
     |> reply(conn)
   rescue
     e ->
       Logger.error(Exception.format(:error, e, __STACKTRACE__))
-      {:internal_error, "internal error: check server logs for details"} |> reply(conn)
+      {:internal_error, "internal error: see logs for details"} |> reply(conn)
   end
 
   # Use case success (204).

@@ -1,19 +1,21 @@
-defmodule Todos.Data.Schema.Story do
+defmodule Todos.Data.Schema.Task do
   @moduledoc """
-  SQL mapper for the `stories` table.
+  SQL mapper for the `tasks` table.
   """
   use Ecto.Schema
   import Ecto.Changeset
+
   alias Todos.Dto
+  alias Todos.Data.Schema.Story
 
   # Define type
   @type t() :: %__MODULE__{}
 
   @primary_key {:id, :string, autogenerate: {Ecto.Nanoid, :autogenerate, []}}
-  schema "stories" do
-    field(:blockchain_address, :string)
+  schema "tasks" do
+    belongs_to(:story, Story, type: Ecto.Nanoid)
     field(:name, :string)
-    field(:description, :string)
+    field(:status, :string)
     field(:deleted_at, :naive_datetime)
     timestamps()
   end
@@ -21,11 +23,10 @@ defmodule Todos.Data.Schema.Story do
   @doc "Validate campaign changes"
   def changeset(struct, params) do
     struct
-    |> cast(params, [:blockchain_address, :name, :description, :deleted_at])
-    |> validate_required([:blockchain_address, :name])
+    |> cast(params, [:name, :status, :deleted_at])
+    |> validate_required([:name, :status])
     |> validate_length(:name, min: 1, max: 100)
-    |> validate_length(:description, max: 1000)
-    |> Todos.Util.Validate.blockchain_address()
+    |> validate_length(:status, min: 1, max: 100)
   end
 
   # Create a data transfer object from this schema struct.
@@ -34,7 +35,8 @@ defmodule Todos.Data.Schema.Story do
       %{
         id: struct.id,
         name: struct.name,
-        description: struct.description
+        status: struct.status,
+        story_id: struct.story_id
       }
     end
   end

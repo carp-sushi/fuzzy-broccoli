@@ -3,14 +3,17 @@ defmodule Todos.Http.Router do
   Maps authorized HTTP requests to use cases.
   """
   use Plug.Router
+
   alias Todos.Http.Authorize
   alias Todos.Http.{Authorize, Controller, Response}
-  alias Todos.UseCase.Story.{CreateStory, DeleteStory, GetStory, ListStories}
   alias Todos.Http.Validate
+
+  alias Todos.UseCase.Task.ListTasks
+  alias Todos.UseCase.Story.{CreateStory, DeleteStory, GetStory, ListStories}
 
   plug(:match)
   plug(Authorize)
-  plug(Plug.Parsers, parsers: [:json], json_decoder: Jason)
+  plug(Plug.Parsers, parsers: [:json], json_decoder: Poison)
   plug(:dispatch)
 
   # Allow users to create stories.
@@ -34,6 +37,11 @@ defmodule Todos.Http.Router do
   # Allow users to delete their stories.
   delete "/stories/:story_id" do
     Controller.execute(conn, DeleteStory, %{story_id: story_id})
+  end
+
+  # Allow users to get tasks for stories.
+  get "/stories/:story_id/tasks" do
+    Controller.execute(conn, ListTasks, %{story_id: story_id})
   end
 
   # Catch-all responds with a 404.

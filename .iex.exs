@@ -8,7 +8,7 @@ import String, only: [upcase: 1, downcase: 1]
 # Project imports for ad-hoc testing
 alias Todos.Repo
 alias Todos.Data.Repo.StoryRepo
-alias Todos.Data.Schema.Story
+alias Todos.Data.Schema.{Story, Task}
 alias Todos.UseCase.Story.{CreateStory, DeleteStory, GetStory, ListStories}
 
 # Test accounts
