@@ -10,7 +10,7 @@ defmodule Todos.UseCase.Task.ListTasks do
   @behaviour Todos.UseCase
   def execute(args) do
     case GetStory.execute(args) do
-      {:ok, result} -> list_tasks(result.story.id)
+      {:ok, %{story: story}} -> list_tasks(story.id)
       error -> error
     end
   end
