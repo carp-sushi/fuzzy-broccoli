@@ -5,8 +5,6 @@ defmodule Todos.UseCase.Task.DeleteTask do
   use Todos.Data.Keeper
   alias Todos.UseCase.Task.GetTask
 
-  require Logger
-
   @behaviour Todos.UseCase
   def execute(args) do
     case GetTask.execute(args) do
@@ -17,8 +15,7 @@ defmodule Todos.UseCase.Task.DeleteTask do
 
   # Delete a task and return
   defp delete_task(task_id) do
-    result = task_keeper().delete_task(task_id)
-    Logger.debug("delete task result = #{inspect(result)}")
+    task_keeper().delete_task(task_id)
     :no_content
   end
 end

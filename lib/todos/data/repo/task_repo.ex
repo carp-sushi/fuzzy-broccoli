@@ -63,12 +63,15 @@ defmodule Todos.Data.Repo.TaskRepo do
 
   @doc "Delete a task."
   def delete_task(id) do
-    Repo.update_all(
+    update_all(
       from(t in Task,
         where: t.id == ^id and is_nil(t.deleted_at),
         update: [set: [deleted_at: ^Clock.now()]]
-      ),
-      []
+      )
     )
   end
+
+  # Helper for readability
+  defp update_all(queryable),
+    do: queryable |> Repo.update_all([])
 end

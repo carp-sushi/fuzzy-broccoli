@@ -62,7 +62,16 @@ defmodule Todos.Data.Repo.StoryRepo do
   end
 
   @doc "Delete a story."
-  def delete_story(struct) do
-    update_story(struct, %{deleted_at: Clock.now()})
+  def delete_story(id) do
+    update_all(
+      from(s in Story,
+        where: s.id == ^id and is_nil(s.deleted_at),
+        update: [set: [deleted_at: ^Clock.now()]]
+      )
+    )
   end
+
+  # Helper for readability
+  defp update_all(queryable),
+    do: queryable |> Repo.update_all([])
 end

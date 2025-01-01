@@ -17,5 +17,5 @@ defmodule Todos.Data.Keeper.StoryKeeper do
   @callback update_story(Story.t(), map) :: {:ok, Story.t()} | {:error, any}
 
   @doc "Delete a story."
-  @callback delete_story(Story.t()) :: {:ok, Story.t()} | {:error, any}
+  @callback delete_story(String.t()) :: {non_neg_integer(), nil | [term()]}
 end

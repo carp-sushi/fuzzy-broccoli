@@ -6,7 +6,7 @@ defmodule Todos.Plug do
   alias Todos.Http.{Response, Router}
 
   if Mix.env() == :dev do
-    use Plug.Debugger
+    use Plug.Debugger, otp_app: :todos
   end
 
   plug(Plug.Logger)
