@@ -15,18 +15,19 @@ defmodule Todos.Data.Schema.Task do
   schema "tasks" do
     belongs_to(:story, Story, type: Ecto.Nanoid)
     field(:name, :string)
-    field(:status, :string)
+    field(:status, Ecto.Enum, values: [:todo, :done])
     field(:deleted_at, :naive_datetime)
     timestamps()
   end
 
-  @doc "Validate campaign changes"
+  @doc "Validate task changes"
   def changeset(struct, params) do
     struct
-    |> cast(params, [:name, :status, :deleted_at])
-    |> validate_required([:name, :status])
-    |> validate_length(:name, min: 1, max: 100)
-    |> validate_length(:status, min: 1, max: 100)
+    |> cast(params, [:story_id, :name, :status, :deleted_at])
+    |> validate_required([:story_id, :name, :status])
+    |> validate_length(:name, max: 100)
+    |> validate_inclusion(:status, [:todo, :done])
+    |> foreign_key_constraint(:story_id)
   end
 
   # Create a data transfer object from this schema struct.

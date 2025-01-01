@@ -9,6 +9,7 @@ defmodule Todos.UseCase.Task.ListTasks do
 
   @behaviour Todos.UseCase
   def execute(args) do
+    # Makes sure the story exists, and is owned by the requestor.
     case GetStory.execute(args) do
       {:ok, %{story: story}} -> list_tasks(story.id)
       error -> error

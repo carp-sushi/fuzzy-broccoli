@@ -62,7 +62,13 @@ defmodule Todos.Data.Repo.TaskRepo do
   end
 
   @doc "Delete a task."
-  def delete_task(struct) do
-    update_task(struct, %{deleted_at: Clock.now()})
+  def delete_task(id) do
+    Repo.update_all(
+      from(t in Task,
+        where: t.id == ^id and is_nil(t.deleted_at),
+        update: [set: [deleted_at: ^Clock.now()]]
+      ),
+      []
+    )
   end
 end

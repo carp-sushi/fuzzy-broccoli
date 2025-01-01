@@ -17,5 +17,5 @@ defmodule Todos.Data.Keeper.TaskKeeper do
   @callback update_task(Task.t(), map) :: {:ok, Task.t()} | {:error, any}
 
   @doc "Delete a task."
-  @callback delete_task(Task.t()) :: {:ok, Task.t()} | {:error, any}
+  @callback delete_task(String.t()) :: tuple()
 end

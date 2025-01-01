@@ -8,7 +8,7 @@ defmodule Todos.Http.Router do
   alias Todos.Http.{Authorize, Controller, Response}
   alias Todos.Http.Validate
 
-  alias Todos.UseCase.Task.ListTasks
+  alias Todos.UseCase.Task.{CreateTask, DeleteTask, GetTask, ListTasks}
   alias Todos.UseCase.Story.{CreateStory, DeleteStory, GetStory, ListStories}
 
   plug(:match)
@@ -42,6 +42,24 @@ defmodule Todos.Http.Router do
   # Allow users to get tasks for stories.
   get "/stories/:story_id/tasks" do
     Controller.execute(conn, ListTasks, %{story_id: story_id})
+  end
+
+  # Allow users to create tasks for stories.
+  post "/stories/:story_id/tasks" do
+    case Validate.create_task_args(conn, story_id) do
+      {:ok, args} -> Controller.execute(conn, CreateTask, args)
+      {:error, error} -> Response.send_json(conn, %{error: error}, 400)
+    end
+  end
+
+  # Allow users to get individual tasks for stories.
+  get "/stories/:story_id/tasks/:task_id" do
+    Controller.execute(conn, GetTask, %{story_id: story_id, task_id: task_id})
+  end
+
+  # Allow users to delete individual tasks for stories.
+  delete "/stories/:story_id/tasks/:task_id" do
+    Controller.execute(conn, DeleteTask, %{story_id: story_id, task_id: task_id})
   end
 
   # Catch-all responds with a 404.

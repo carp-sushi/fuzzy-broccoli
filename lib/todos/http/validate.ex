@@ -41,4 +41,22 @@ defmodule Todos.Http.Validate do
       {:error, Todos.Error.extract(cs)}
     end
   end
+
+  @doc "Parse arguments for creating new tasks"
+  def create_task_args(conn, story_id) do
+    data = %{story_id: story_id}
+    types = %{name: :string}
+
+    cs =
+      {data, types}
+      |> Changeset.cast(conn.body_params, [:name])
+      |> validate_required([:name])
+      |> validate_length(:name, min: 1, max: 100)
+
+    if cs.valid? do
+      {:ok, Changeset.apply_changes(cs)}
+    else
+      {:error, Todos.Error.extract(cs)}
+    end
+  end
 end

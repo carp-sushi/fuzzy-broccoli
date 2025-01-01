@@ -23,8 +23,8 @@ Repo.insert!(%Story{
 })
 
 # Tasks
-Repo.insert!(%Task{name: "Bacon", status: "todo", story: groceries})
-Repo.insert!(%Task{name: "Eggs", status: "todo", story: groceries})
-Repo.insert!(%Task{name: "Bread", status: "todo", story: groceries})
-Repo.insert!(%Task{name: "Butter", status: "todo", story: groceries})
-Repo.insert!(%Task{name: "Coffee", status: "todo", story: groceries})
+Repo.insert!(%Task{name: "Bacon", status: :todo, story: groceries})
+Repo.insert!(%Task{name: "Eggs", status: :todo, story: groceries})
+Repo.insert!(%Task{name: "Bread", status: :todo, story: groceries})
+Repo.insert!(%Task{name: "Butter", status: :todo, story: groceries})
+Repo.insert!(%Task{name: "Coffee", status: :todo, story: groceries})

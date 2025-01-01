@@ -9,15 +9,7 @@ if config_env() == :prod do
 
   db_pool_size = System.get_env("DB_POOL_SIZE") || "10"
 
-  network_prefix =
-    System.get_env("NETWORK_PREFIX") ||
-      raise "NETWORK_PREFIX not defined. Must be 'tp' or 'pb'"
-
   config :todos, Todos.Repo,
     url: db_url,
     pool_size: String.to_integer(db_pool_size)
-
-  # Cloud deployment network prefix
-  config :todos,
-    network_prefix: network_prefix
 end
