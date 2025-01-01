@@ -5,7 +5,7 @@ import Config
 if config_env() == :prod do
   db_url =
     System.get_env("DB_URL") ||
-      raise "DB_URL not defined. Example: ecto://USER:PASS@HOST/DATABASE"
+      raise "DB_URL not defined. Example: ecto://USER:PASS@HOST:PORT/DATABASE"
 
   db_pool_size = System.get_env("DB_POOL_SIZE") || "10"
 

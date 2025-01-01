@@ -23,4 +23,4 @@ run:
 
 .PHONY: release
 release:
-	NETWORK_PREFIX=pb MIX_ENV=prod mix release
+	NETWORK_PREFIX=tp MIX_ENV=prod mix release
