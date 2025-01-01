@@ -17,6 +17,10 @@ test:
 clean:
 	mix clean
 
+.PHONY: migrate
+migrate:
+	mix migrate
+
 .PHONY: run
 run:
 	iex -S mix

@@ -50,6 +50,11 @@ defmodule IExHelpers do
     Mix.Task.run("compile.elixir")
     Application.start(Mix.Project.config()[:app])
   end
+
+  def migrate! do
+    path = Application.app_dir(:todos, "priv/repo/migrations")
+    Ecto.Migrator.run(Todos.Repo, path, :up, all: true)
+  end
 end
 
 # Import helper functions into IEx session scope
