@@ -37,7 +37,8 @@ defmodule Todos.Data.Schema.Story do
       %{
         id: struct.id,
         name: struct.name,
-        description: struct.description
+        description: struct.description,
+        blockchain_address: struct.blockchain_address
       }
     end
   end

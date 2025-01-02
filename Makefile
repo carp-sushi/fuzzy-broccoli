@@ -25,6 +25,10 @@ migrate:
 run:
 	iex -S mix
 
+.PHONY: release-testnet
+release-testnet:
+	NETWORK_PREFIX=tp MIX_ENV=prod mix release
+
 .PHONY: release
 release:
-	NETWORK_PREFIX=tp MIX_ENV=prod mix release
+	MIX_ENV=prod mix release

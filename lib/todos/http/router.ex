@@ -9,7 +9,7 @@ defmodule Todos.Http.Router do
   alias Todos.Http.Validate
 
   alias Todos.UseCase.Task.{CreateTask, DeleteTask, GetTask, ListTasks, UpdateTask}
-  alias Todos.UseCase.Story.{CreateStory, DeleteStory, GetStory, ListStories}
+  alias Todos.UseCase.Story.{CreateStory, DeleteStory, GetStory, ListStories, UpdateStory}
 
   plug(:match)
   plug(Authorize)
@@ -39,8 +39,13 @@ defmodule Todos.Http.Router do
     Controller.execute(conn, DeleteStory, %{story_id: story_id})
   end
 
-  # TODO
-  # update story :: PATCH {name | description}
+  # Allow users to update their stories.
+  patch "/stories/:story_id" do
+    case Validate.update_story_args(conn, story_id) do
+      {:ok, args} -> Controller.execute(conn, UpdateStory, args)
+      {:error, error} -> Response.bad_request(conn, error)
+    end
+  end
 
   # Allow users to get tasks for stories.
   get "/stories/:story_id/tasks" do

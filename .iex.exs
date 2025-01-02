@@ -9,7 +9,7 @@ import String, only: [upcase: 1, downcase: 1]
 alias Todos.Repo
 alias Todos.Data.Repo.{StoryRepo, TaskRepo}
 alias Todos.Data.Schema.{Story, Task}
-alias Todos.UseCase.Story.{CreateStory, DeleteStory, GetStory, ListStories}
+alias Todos.UseCase.Story.{CreateStory, DeleteStory, GetStory, ListStories, UpdateStory}
 alias Todos.UseCase.Task.{CreateTask, DeleteTask, GetTask, ListTasks, UpdateTask}
 
 # Test accounts
