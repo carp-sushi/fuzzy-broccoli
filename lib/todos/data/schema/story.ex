@@ -4,7 +4,9 @@ defmodule Todos.Data.Schema.Story do
   """
   use Ecto.Schema
   import Ecto.Changeset
+
   alias Todos.Dto
+  alias Todos.Data.Schema.Task
 
   # Define type
   @type t() :: %__MODULE__{}
@@ -15,6 +17,7 @@ defmodule Todos.Data.Schema.Story do
     field(:name, :string)
     field(:description, :string)
     field(:deleted_at, :naive_datetime)
+    has_many(:tasks, Task)
     timestamps()
   end
 

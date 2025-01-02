@@ -13,10 +13,10 @@ defmodule Todos.Data.Schema.Task do
 
   @primary_key {:id, :string, autogenerate: {Ecto.Nanoid, :autogenerate, []}}
   schema "tasks" do
-    belongs_to(:story, Story, type: Ecto.Nanoid)
     field(:name, :string)
     field(:status, Ecto.Enum, values: [:todo, :done])
     field(:deleted_at, :naive_datetime)
+    belongs_to(:story, Story, type: Ecto.Nanoid)
     timestamps()
   end
 
