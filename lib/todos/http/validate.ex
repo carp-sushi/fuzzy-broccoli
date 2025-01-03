@@ -15,99 +15,70 @@ defmodule Todos.Http.Validate do
     types = %{blockchain_address: :string}
     keys = Map.keys(types)
 
-    cs =
-      {data, types}
-      |> Changeset.cast(%{blockchain_address: blockchain_address}, keys)
-      |> Todos.Util.Validate.blockchain_address()
-
-    if cs.valid? do
-      {:ok, Changeset.apply_changes(cs)}
-    else
-      {:error, Error.extract(cs)}
-    end
+    {data, types}
+    |> Changeset.cast(%{blockchain_address: blockchain_address}, keys)
+    |> Todos.Util.Validate.blockchain_address()
+    |> unpack_changes()
   end
 
   @doc """
   Parse arguments for creating new stories from a request body.
   """
-  def create_story_args(conn) do
-    data = %{}
-    types = %{name: :string, description: :string}
-
-    cs =
-      {data, types}
-      |> Changeset.cast(conn.body_params, [:name, :description])
-      |> validate_required([:name])
-      |> validate_length(:name, max: 100)
-      |> validate_length(:description, max: 1000)
-
-    if cs.valid? do
-      {:ok, Changeset.apply_changes(cs)}
-    else
-      {:error, Error.extract(cs)}
-    end
+  def create_story_args(conn, data \\ %{}) do
+    {data, %{name: :string, description: :string}}
+    |> Changeset.cast(conn.body_params, [:name, :description])
+    |> validate_required([:name])
+    |> validate_length(:name, max: 100)
+    |> validate_length(:description, max: 1000)
+    |> unpack_changes()
   end
 
   @doc """
   Parse arguments for updating existing stories from a request body.
   """
-  def update_story_args(conn, story_id) do
-    data = %{story_id: story_id}
+  def update_story_args(conn, data \\ %{}) do
     types = %{name: :string, description: :string}
-    keys = Map.keys(types)
 
-    cs =
-      {data, types}
-      |> Changeset.cast(conn.body_params, keys)
-      |> validate_length(:name, max: 100)
-      |> validate_length(:description, max: 1000)
-
-    if cs.valid? do
-      {:ok, Changeset.apply_changes(cs)}
-    else
-      {:error, Error.extract(cs)}
-    end
+    {data, types}
+    |> Changeset.cast(conn.body_params, Map.keys(types))
+    |> validate_length(:name, max: 100)
+    |> validate_length(:description, max: 1000)
+    |> unpack_changes()
   end
 
   @doc """
   Parse arguments for creating new tasks from a request body.
   """
-  def create_task_args(conn, story_id) do
-    data = %{story_id: story_id}
+  def create_task_args(conn, data \\ %{}) do
     types = %{name: :string}
     keys = Map.keys(types)
 
-    cs =
-      {data, types}
-      |> Changeset.cast(conn.body_params, keys)
-      |> validate_required(keys)
-      |> validate_length(:name, max: 100)
-
-    if cs.valid? do
-      {:ok, Changeset.apply_changes(cs)}
-    else
-      {:error, Error.extract(cs)}
-    end
+    {data, types}
+    |> Changeset.cast(conn.body_params, keys)
+    |> validate_required(keys)
+    |> validate_length(:name, max: 100)
+    |> unpack_changes()
   end
 
   @doc """
   Parse arguments for updating existing tasks from a request body.
   """
-  def update_task_args(conn, story_id, task_id) do
-    data = %{story_id: story_id, task_id: task_id}
+  def update_task_args(conn, data \\ %{}) do
     types = %{name: :string, status: :string}
-    keys = Map.keys(types)
 
-    cs =
-      {data, types}
-      |> Changeset.cast(conn.body_params, keys)
-      |> validate_length(:name, max: 100)
-      |> validate_inclusion(:status, ["todo", "done"])
+    {data, types}
+    |> Changeset.cast(conn.body_params, Map.keys(types))
+    |> validate_length(:name, max: 100)
+    |> validate_inclusion(:status, ["todo", "done"])
+    |> unpack_changes()
+  end
 
-    if cs.valid? do
-      {:ok, Changeset.apply_changes(cs)}
+  # Unpack a changeset into success or error tuple.
+  defp unpack_changes(changeset) do
+    if changeset.valid? do
+      {:ok, Changeset.apply_changes(changeset)}
     else
-      {:error, Error.extract(cs)}
+      {:error, Error.extract(changeset)}
     end
   end
 end

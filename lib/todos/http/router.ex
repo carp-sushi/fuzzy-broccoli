@@ -4,10 +4,7 @@ defmodule Todos.Http.Router do
   """
   use Plug.Router
 
-  alias Todos.Http.Authorize
-  alias Todos.Http.{Authorize, Controller, Response}
-  alias Todos.Http.Validate
-
+  alias Todos.Http.{Authorize, Controller, Response, Validate}
   alias Todos.UseCase.Task.{CreateTask, DeleteTask, GetTask, ListTasks, UpdateTask}
   alias Todos.UseCase.Story.{CreateStory, DeleteStory, GetStory, ListStories, UpdateStory}
 
@@ -26,6 +23,11 @@ defmodule Todos.Http.Router do
 
   # Allow users to list their stories.
   get "/stories" do
+    # TODO: paging...
+    # conn
+    # |> fetch_query_params([:limit, :offset])
+    # |> tap(fn conn -> Logger.debug("Got query params = #{inspect(conn.query_params)}") end)
+    # |> Controller.execute(ListStories)
     Controller.execute(conn, ListStories)
   end
 
@@ -41,7 +43,9 @@ defmodule Todos.Http.Router do
 
   # Allow users to update their stories.
   patch "/stories/:story_id" do
-    case Validate.update_story_args(conn, story_id) do
+    conn
+    |> Validate.update_story_args(%{story_id: story_id})
+    |> case do
       {:ok, args} -> Controller.execute(conn, UpdateStory, args)
       {:error, error} -> Response.bad_request(conn, error)
     end
@@ -54,7 +58,9 @@ defmodule Todos.Http.Router do
 
   # Allow users to create tasks for stories.
   post "/stories/:story_id/tasks" do
-    case Validate.create_task_args(conn, story_id) do
+    conn
+    |> Validate.create_task_args(%{story_id: story_id})
+    |> case do
       {:ok, args} -> Controller.execute(conn, CreateTask, args)
       {:error, error} -> Response.bad_request(conn, error)
     end
@@ -72,7 +78,9 @@ defmodule Todos.Http.Router do
 
   # Allow users to update tasks for stories.
   patch "/stories/:story_id/tasks/:task_id" do
-    case Validate.update_task_args(conn, story_id, task_id) do
+    conn
+    |> Validate.update_task_args(%{story_id: story_id, task_id: task_id})
+    |> case do
       {:ok, args} -> Controller.execute(conn, UpdateTask, args)
       {:error, error} -> Response.bad_request(conn, error)
     end
