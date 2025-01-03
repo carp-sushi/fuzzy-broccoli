@@ -8,20 +8,6 @@ defmodule Todos.Http.Validate do
   alias Todos.Error
 
   @doc """
-  Validate a blockhain address pulled from a request header.
-  """
-  def blockchain_address(params) do
-    data = %{}
-    types = %{blockchain_address: :string}
-    keys = Map.keys(types)
-
-    {data, types}
-    |> Changeset.cast(params, keys)
-    |> Todos.Util.Validate.blockchain_address()
-    |> unpack_changes()
-  end
-
-  @doc """
   Parse arguments for creating new stories from a request body.
   """
   def create_story_request(conn, data \\ %{}) do

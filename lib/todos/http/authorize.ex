@@ -3,7 +3,7 @@ defmodule Todos.Http.Authorize do
   Extracts, validates, and assigns blockchain address headers from requests.
   """
   import Plug.Conn
-  alias Todos.Http.{Response, Validate}
+  alias Todos.Http.Response
   require Logger
 
   # Read header names from config.
@@ -37,7 +37,7 @@ defmodule Todos.Http.Authorize do
   # Validate header value found in request and assign for upstream use.
   defp validate_and_assign_address(conn, addr) do
     %{blockchain_address: addr}
-    |> Validate.blockchain_address()
+    |> Todos.Util.Validate.blockchain_address_params()
     |> case do
       {:ok, data} -> assign(conn, :blockchain_address, data.blockchain_address)
       _ -> Response.unauthorized(conn)
