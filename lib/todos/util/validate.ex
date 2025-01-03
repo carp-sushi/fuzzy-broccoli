@@ -17,7 +17,7 @@ defmodule Todos.Util.Validate do
     changeset =
       {data, types}
       |> Changeset.cast(params, keys)
-      |> blockchain_address()
+      |> blockchain_address_changeset()
 
     if changeset.valid? do
       {:ok, Changeset.apply_changes(changeset)}
@@ -27,7 +27,7 @@ defmodule Todos.Util.Validate do
   end
 
   @doc "Validate a blockhain address"
-  def blockchain_address(changeset) do
+  def blockchain_address_changeset(changeset) do
     changeset
     |> validate_required([:blockchain_address])
     |> validate_length(:blockchain_address, min: 41, max: 61)

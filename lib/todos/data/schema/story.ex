@@ -7,6 +7,7 @@ defmodule Todos.Data.Schema.Story do
 
   alias Todos.Dto
   alias Todos.Data.Schema.Task
+  alias Todos.Util.Validate
 
   # Define type
   @type t() :: %__MODULE__{}
@@ -28,7 +29,7 @@ defmodule Todos.Data.Schema.Story do
     |> validate_required([:blockchain_address, :name])
     |> validate_length(:name, min: 1, max: 100)
     |> validate_length(:description, max: 1000)
-    |> Todos.Util.Validate.blockchain_address()
+    |> Validate.blockchain_address_changeset()
   end
 
   # Create a data transfer object from this schema struct.
