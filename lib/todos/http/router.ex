@@ -15,7 +15,7 @@ defmodule Todos.Http.Router do
 
   # Allow users to create stories.
   post "/stories" do
-    case Validate.create_story_args(conn) do
+    case Validate.create_story_request(conn) do
       {:ok, args} -> Controller.execute(conn, CreateStory, args)
       {:error, error} -> Response.bad_request(conn, error)
     end
@@ -44,7 +44,7 @@ defmodule Todos.Http.Router do
   # Allow users to update their stories.
   patch "/stories/:story_id" do
     conn
-    |> Validate.update_story_args(%{story_id: story_id})
+    |> Validate.update_story_request(%{story_id: story_id})
     |> case do
       {:ok, args} -> Controller.execute(conn, UpdateStory, args)
       {:error, error} -> Response.bad_request(conn, error)
@@ -59,7 +59,7 @@ defmodule Todos.Http.Router do
   # Allow users to create tasks for stories.
   post "/stories/:story_id/tasks" do
     conn
-    |> Validate.create_task_args(%{story_id: story_id})
+    |> Validate.create_task_request(%{story_id: story_id})
     |> case do
       {:ok, args} -> Controller.execute(conn, CreateTask, args)
       {:error, error} -> Response.bad_request(conn, error)
@@ -79,7 +79,7 @@ defmodule Todos.Http.Router do
   # Allow users to update tasks for stories.
   patch "/stories/:story_id/tasks/:task_id" do
     conn
-    |> Validate.update_task_args(%{story_id: story_id, task_id: task_id})
+    |> Validate.update_task_request(%{story_id: story_id, task_id: task_id})
     |> case do
       {:ok, args} -> Controller.execute(conn, UpdateTask, args)
       {:error, error} -> Response.bad_request(conn, error)

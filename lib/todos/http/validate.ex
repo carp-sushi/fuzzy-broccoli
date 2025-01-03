@@ -1,6 +1,6 @@
 defmodule Todos.Http.Validate do
   @moduledoc """
-  Http request validations
+  Http header and request validators.
   """
   alias Ecto.Changeset
   import Ecto.Changeset
@@ -10,13 +10,13 @@ defmodule Todos.Http.Validate do
   @doc """
   Validate a blockhain address pulled from a request header.
   """
-  def blockchain_address(blockchain_address) do
+  def blockchain_address(params) do
     data = %{}
     types = %{blockchain_address: :string}
     keys = Map.keys(types)
 
     {data, types}
-    |> Changeset.cast(%{blockchain_address: blockchain_address}, keys)
+    |> Changeset.cast(params, keys)
     |> Todos.Util.Validate.blockchain_address()
     |> unpack_changes()
   end
@@ -24,7 +24,7 @@ defmodule Todos.Http.Validate do
   @doc """
   Parse arguments for creating new stories from a request body.
   """
-  def create_story_args(conn, data \\ %{}) do
+  def create_story_request(conn, data \\ %{}) do
     {data, %{name: :string, description: :string}}
     |> Changeset.cast(conn.body_params, [:name, :description])
     |> validate_required([:name])
@@ -36,7 +36,7 @@ defmodule Todos.Http.Validate do
   @doc """
   Parse arguments for updating existing stories from a request body.
   """
-  def update_story_args(conn, data \\ %{}) do
+  def update_story_request(conn, data \\ %{}) do
     types = %{name: :string, description: :string}
 
     {data, types}
@@ -49,7 +49,7 @@ defmodule Todos.Http.Validate do
   @doc """
   Parse arguments for creating new tasks from a request body.
   """
-  def create_task_args(conn, data \\ %{}) do
+  def create_task_request(conn, data \\ %{}) do
     types = %{name: :string}
     keys = Map.keys(types)
 
@@ -63,7 +63,7 @@ defmodule Todos.Http.Validate do
   @doc """
   Parse arguments for updating existing tasks from a request body.
   """
-  def update_task_args(conn, data \\ %{}) do
+  def update_task_request(conn, data \\ %{}) do
     types = %{name: :string, status: :string}
 
     {data, types}
