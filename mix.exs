@@ -31,12 +31,11 @@ defmodule Todos.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:ecto_identifier, "~> 0.2.0"},
       {:ecto_sql, "~> 3.9.2"},
-      {:postgrex, "~> 0.16.5"},
       {:plug_cowboy, "~> 2.6.1"},
-      # {:jason, "~> 1.4"},
-      {:poison, "~> 6.0"},
-      {:ecto_identifier, "~> 0.2.0"}
+      {:poison, "~> 6.0.0"},
+      {:postgrex, "~> 0.16.5"}
     ]
   end
 
