@@ -10,7 +10,7 @@ defmodule Todos.UseCase.Story.GetStory do
   @behaviour Todos.UseCase
   def execute(args) do
     Args.validate(args, [:story_id, :blockchain_address], fn ->
-      case stories().get(args.story_id) do
+      case story_keeper().get_story(args.story_id) do
         {:error, error} -> {:not_found, error}
         {:ok, story} -> verify_ownership(story, args.blockchain_address)
       end

@@ -9,6 +9,7 @@ defmodule Todos.MixProject do
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       aliases: aliases(),
+      preferred_cli_env: [quality: :test],
       test_coverage: [
         summary: [
           threshold: 80
@@ -31,11 +32,12 @@ defmodule Todos.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:ecto_identifier, "~> 0.2.0"},
       {:ecto_sql, "~> 3.9.2"},
-      {:postgrex, "~> 0.16.5"},
       {:plug_cowboy, "~> 2.6.1"},
-      {:jason, "~> 1.4"},
-      {:ecto_identifier, "~> 0.2.0"}
+      {:poison, "~> 6.0.0"},
+      {:postgrex, "~> 0.16.5"},
+      {:credo, "~> 1.7.11", only: [:dev, :test], runtime: false}
     ]
   end
 
@@ -45,7 +47,8 @@ defmodule Todos.MixProject do
       setup: ["deps.get", "ecto.setup"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
-      test: ["ecto.create --quiet", "ecto.migrate", "test"]
+      test: ["ecto.create --quiet", "ecto.migrate", "test"],
+      quality: ["test", "credo --strict"]
     ]
   end
 end

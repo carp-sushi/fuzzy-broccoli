@@ -8,14 +8,20 @@ defmodule Todos.Http.Response do
   end
 
   @doc "Not found error helper."
-  def not_found(conn) do
-    send_json(conn, %{error: %{message: "not found"}}, 404)
+  def not_found(conn, message \\ "route not matched") do
+    send_json(conn, %{error: %{message: message}}, 404)
     |> halt
   end
 
   @doc "Unauthorized request error helper."
-  def unauthorized(conn) do
-    send_json(conn, %{error: %{message: "unauthorized"}}, 401)
+  def unauthorized(conn, message \\ "unauthorized") do
+    send_json(conn, %{error: %{message: message}}, 401)
+    |> halt
+  end
+
+  @doc "Bad request error helper."
+  def bad_request(conn, error) do
+    send_json(conn, %{error: error}, 400)
     |> halt
   end
 
@@ -23,6 +29,6 @@ defmodule Todos.Http.Response do
   def send_json(conn, data, status \\ 200) do
     conn
     |> put_resp_content_type("application/json")
-    |> send_resp(status, Jason.encode!(data))
+    |> send_resp(status, Poison.encode!(data))
   end
 end

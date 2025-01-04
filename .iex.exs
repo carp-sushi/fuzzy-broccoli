@@ -7,9 +7,10 @@ import String, only: [upcase: 1, downcase: 1]
 
 # Project imports for ad-hoc testing
 alias Todos.Repo
-alias Todos.Data.Repo.StoryRepo
-alias Todos.Data.Schema.Story
-alias Todos.UseCase.Story.{CreateStory, DeleteStory, GetStory, ListStories}
+alias Todos.Data.Repo.{StoryRepo, TaskRepo}
+alias Todos.Data.Schema.{Story, Task}
+alias Todos.UseCase.Story.{CreateStory, DeleteStory, GetStory, ListStories, UpdateStory}
+alias Todos.UseCase.Task.{CreateTask, DeleteTask, GetTask, ListTasks, UpdateTask}
 
 # Test accounts
 alice = "tp18vd8fpwxzck93qlwghaj6arh4p7c5n89x8kska"
@@ -49,6 +50,11 @@ defmodule IExHelpers do
     Application.stop(Mix.Project.config()[:app])
     Mix.Task.run("compile.elixir")
     Application.start(Mix.Project.config()[:app])
+  end
+
+  def migrate! do
+    path = Application.app_dir(:todos, "priv/repo/migrations")
+    Ecto.Migrator.run(Todos.Repo, path, :up, all: true)
   end
 end
 

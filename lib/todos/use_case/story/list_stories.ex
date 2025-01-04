@@ -3,12 +3,13 @@ defmodule Todos.UseCase.Story.ListStories do
   Get stories for a blockchain address.
   """
   use Todos.Data.Keeper
+  alias Todos.UseCase.Args
 
   @behaviour Todos.UseCase
   def execute(args) do
-    Todos.UseCase.Args.validate(args, [:blockchain_address], fn ->
-      dtos = stories().list(args.blockchain_address) |> Enum.map(&Todos.Dto.from_schema/1)
-      {:ok, %{stories: dtos}}
+    Args.validate(args, [:blockchain_address], fn ->
+      stories = story_keeper().list_stories(args.blockchain_address)
+      {:ok, %{stories: stories}}
     end)
   end
 end

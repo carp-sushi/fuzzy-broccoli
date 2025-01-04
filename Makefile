@@ -1,5 +1,5 @@
 .PHONY: all
-all: format compile
+all: format compile test
 
 .PHONY: format
 format:
@@ -17,9 +17,17 @@ test:
 clean:
 	mix clean
 
+.PHONY: migrate
+migrate:
+	mix migrate
+
 .PHONY: run
 run:
 	iex -S mix
+
+.PHONY: release-testnet
+release-testnet:
+	NETWORK_PREFIX=tp MIX_ENV=prod mix release
 
 .PHONY: release
 release:

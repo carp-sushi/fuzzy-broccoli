@@ -4,12 +4,17 @@ defmodule Todos.Data.Keeper do
   """
   defmacro __using__(_opts) do
     quote do
-      alias Todos.Data.Keeper.StoryKeeper
-      alias Todos.Data.Repo.StoryRepo
+      alias Todos.Data.Keeper.{StoryKeeper, TaskKeeper}
+      alias Todos.Data.Repo.{StoryRepo, TaskRepo}
 
-      @spec stories :: StoryKeeper
-      defp stories do
+      @spec story_keeper :: StoryKeeper
+      defp story_keeper do
         Application.get_env(:todos, :story_keeper, StoryRepo)
+      end
+
+      @spec task_keeper :: TaskKeeper
+      defp task_keeper do
+        Application.get_env(:todos, :task_keeper, TaskRepo)
       end
     end
   end
