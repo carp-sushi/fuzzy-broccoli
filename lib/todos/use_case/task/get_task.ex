@@ -21,7 +21,7 @@ defmodule Todos.UseCase.Task.GetTask do
     Args.validate(args, [:task_id], fn ->
       case task_keeper().get_task(args.task_id) do
         {:ok, task} -> verify_story(task, args.story_id)
-        {:error, error} -> {:not_found, error}
+        {:error, error} -> {:error, error, :not_found}
       end
     end)
   end
@@ -30,7 +30,7 @@ defmodule Todos.UseCase.Task.GetTask do
   defp verify_story(task, story_id) do
     case task.story_id == story_id do
       true -> {:ok, %{task: Dto.from_schema(task)}}
-      false -> {:not_found, "task not found: #{task.id}"}
+      false -> {:error, "task not found: #{task.id}", :not_found}
     end
   end
 end

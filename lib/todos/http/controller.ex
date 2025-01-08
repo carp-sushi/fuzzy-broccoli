@@ -13,33 +13,44 @@ defmodule Todos.Http.Controller do
   rescue
     e ->
       Logger.error(Exception.format(:error, e, __STACKTRACE__))
-      {:internal_error, "internal error: see logs for details"} |> reply(conn)
+      {:error, "internal error: see logs for details", :internal_error} |> reply(conn)
   end
 
   # Use case success (204).
-  defp reply(:no_content, conn),
+  defp reply(:ok, conn),
     do: Response.no_content(conn)
 
-  # Use case success (200).
-  defp reply({:ok, data}, conn),
-    do: Response.send_json(conn, data)
-
-  # Use case success (201).
-  defp reply({:created, data}, conn),
-    do: Response.send_json(conn, data, 201)
-
-  # Use case not found (404)
-  defp reply({:not_found, message}, conn) do
-    Response.send_json(conn, %{error: %{message: message}}, 404)
+  # Use case success (200, 201).
+  defp reply({:ok, data}, conn) do
+    if conn.method == "POST" do
+      Response.send_json(conn, data, 201)
+    else
+      Response.send_json(conn, data)
+    end
   end
 
-  # Use case invalid args (400)
-  defp reply({:invalid_args, message}, conn) do
+  # Use case failure (400)
+  defp reply({:error, message}, conn) do
     Response.send_json(conn, %{error: %{message: message}}, 400)
   end
 
-  # Use case internal error (500)
-  defp reply({:internal_error, message}, conn) do
-    Response.send_json(conn, %{error: %{message: message}}, 500)
+  # Use case failure (4xx, 5xx)
+  defp reply({:error, message, status}, conn) do
+    Response.send_json(
+      conn,
+      %{error: %{message: message}},
+      http_status(status)
+    )
+  end
+
+  # Convert use case status to http status
+  defp http_status(status) do
+    case status do
+      :invalid_args -> 400
+      :not_found -> 404
+      :todo -> 501
+      :unavailable -> 503
+      _ -> 500
+    end
   end
 end

@@ -7,8 +7,7 @@ config :todos,
 # Base configuration (defaults)
 config :todos,
   network_prefix: System.get_env("NETWORK_PREFIX") || "pb",
-  user_header: "x-account-address",
-  group_header: "x-group-policy",
+  auth_header: "x-account-address",
   max_records: 1000,
   uri_base: "/todos/api/v1"
 

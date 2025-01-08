@@ -11,16 +11,16 @@ defmodule Todos.UseCase.Story.UpdateStory do
   @behaviour Todos.UseCase
   def execute(args) do
     case GetStory.execute(args) do
-      {:ok, %{story: story}} -> unpack_updates(args, story) |> update_story(story)
+      {:ok, %{story: story}} -> args |> unpack_updates(story) |> update_story(story)
       error -> error
     end
   end
 
   # Unpack any updates, falling back to existing values.
-  defp unpack_updates(args, existing),
+  defp unpack_updates(args, story),
     do: %{
-      name: Map.get(args, :name) || existing.name,
-      description: Map.get(args, :description) || existing.description
+      name: Map.get(args, :name) || story.name,
+      description: Map.get(args, :description) || story.description
     }
 
   # Performs the story update.
@@ -30,12 +30,11 @@ defmodule Todos.UseCase.Story.UpdateStory do
     |> story_keeper().update_story(updates)
     |> case do
       {:ok, updated} -> {:ok, %{story: Dto.from_schema(updated)}}
-      {:error, error} -> {:invalid_args, error}
+      error -> error
     end
   end
 
-  # Convert a story data map to a formal schema struct that only as primary fields set
-  # (ie fields we dont' want updated in this use case).
+  # Create a schema struct with identifiers set.
   defp to_schema(data),
     do: %Story{
       id: data.id,

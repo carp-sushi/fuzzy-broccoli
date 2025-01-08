@@ -6,7 +6,7 @@ defmodule Todos.UseCase.Args do
   @doc "Call a function if input args map contains all required keys."
   def validate(args, keys, func) do
     if is_nil(args) || missing_keys?(args, keys) do
-      {:invalid_args, "missing required args: #{inspect(keys)}"}
+      {:error, "missing required args: #{inspect(keys)}"}
     else
       func.()
     end

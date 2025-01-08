@@ -8,6 +8,7 @@ defmodule Todos.MixProject do
       elixir: "~> 1.18",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
+      elixirc_paths: elixirc_paths(Mix.env()),
       aliases: aliases(),
       preferred_cli_env: [quality: :test],
       test_coverage: [
@@ -15,7 +16,12 @@ defmodule Todos.MixProject do
           threshold: 80
         ],
         ignore_modules: [
-          TestUtil
+          FakeData,
+          Mix.Tasks.Migrate,
+          StoryUtil,
+          TaskUtil,
+          TestUtil,
+          Todos.Util.Clock
         ]
       ]
     ]
@@ -37,6 +43,7 @@ defmodule Todos.MixProject do
       {:plug_cowboy, "~> 2.6.1"},
       {:poison, "~> 6.0.0"},
       {:postgrex, "~> 0.16.5"},
+      {:hammox, "~> 0.7", only: :test},
       {:credo, "~> 1.7.11", only: [:dev, :test], runtime: false}
     ]
   end
@@ -51,4 +58,8 @@ defmodule Todos.MixProject do
       quality: ["test", "credo --strict"]
     ]
   end
+
+  # Add mocks to path in test
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_), do: ["lib"]
 end

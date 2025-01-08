@@ -1,5 +1,5 @@
 .PHONY: all
-all: format compile test
+all: format compile
 
 .PHONY: format
 format:
@@ -11,7 +11,7 @@ compile:
 
 .PHONY: test
 test:
-	mix test
+	mix test --trace --cover
 
 .PHONY: clean
 clean:

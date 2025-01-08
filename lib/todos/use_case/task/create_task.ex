@@ -23,8 +23,8 @@ defmodule Todos.UseCase.Task.CreateTask do
   # Create a task
   defp create_task(args) do
     case task_keeper().create_task(args) do
-      {:ok, task} -> {:created, %{task: Dto.from_schema(task)}}
-      {:error, error} -> {:invalid_args, error}
+      {:ok, task} -> {:ok, %{task: Dto.from_schema(task)}}
+      error -> error
     end
   end
 end

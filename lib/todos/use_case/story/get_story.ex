@@ -11,7 +11,7 @@ defmodule Todos.UseCase.Story.GetStory do
   def execute(args) do
     Args.validate(args, [:story_id, :blockchain_address], fn ->
       case story_keeper().get_story(args.story_id) do
-        {:error, error} -> {:not_found, error}
+        {:error, error} -> {:error, error, :not_found}
         {:ok, story} -> verify_ownership(story, args.blockchain_address)
       end
     end)
@@ -21,7 +21,7 @@ defmodule Todos.UseCase.Story.GetStory do
   defp verify_ownership(story, blockchain_address) do
     case story.blockchain_address == blockchain_address do
       true -> {:ok, %{story: Dto.from_schema(story)}}
-      false -> {:not_found, "story not found: #{story.id}"}
+      false -> {:error, "story not found: #{story.id}", :not_found}
     end
   end
 end

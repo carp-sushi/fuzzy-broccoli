@@ -2,8 +2,6 @@ defmodule Todos.Data.Schema.TaskTest do
   use ExUnit.Case, async: true
   alias Todos.Data.Schema.Task
 
-  require Logger
-
   setup do
     %{
       params: %{

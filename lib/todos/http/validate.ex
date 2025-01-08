@@ -10,8 +10,8 @@ defmodule Todos.Http.Validate do
   @doc """
   Parse arguments for creating new stories from a request body.
   """
-  def create_story_request(conn, data \\ %{}) do
-    {data, %{name: :string, description: :string}}
+  def create_story_request(conn) do
+    {%{}, %{name: :string, description: :string}}
     |> Changeset.cast(conn.body_params, [:name, :description])
     |> validate_required([:name])
     |> validate_length(:name, max: 100)
@@ -22,7 +22,7 @@ defmodule Todos.Http.Validate do
   @doc """
   Parse arguments for updating existing stories from a request body.
   """
-  def update_story_request(conn, data \\ %{}) do
+  def update_story_request(conn, data) do
     types = %{name: :string, description: :string}
 
     {data, types}
@@ -35,7 +35,7 @@ defmodule Todos.Http.Validate do
   @doc """
   Parse arguments for creating new tasks from a request body.
   """
-  def create_task_request(conn, data \\ %{}) do
+  def create_task_request(conn, data) do
     types = %{name: :string}
     keys = Map.keys(types)
 
@@ -49,7 +49,7 @@ defmodule Todos.Http.Validate do
   @doc """
   Parse arguments for updating existing tasks from a request body.
   """
-  def update_task_request(conn, data \\ %{}) do
+  def update_task_request(conn, data) do
     types = %{name: :string, status: :string}
 
     {data, types}

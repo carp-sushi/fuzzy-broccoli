@@ -11,8 +11,8 @@ defmodule Todos.UseCase.Story.CreateStory do
   def execute(args) do
     Args.validate(args, [:name, :blockchain_address], fn ->
       case story_keeper().create_story(args) do
-        {:ok, story} -> {:created, %{story: Dto.from_schema(story)}}
-        {:error, error} -> {:invalid_args, error}
+        {:ok, story} -> {:ok, %{story: Dto.from_schema(story)}}
+        error -> error
       end
     end)
   end

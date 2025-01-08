@@ -19,5 +19,5 @@ config :todos,
   network_prefix: "tp",
   max_records: 100
 
-# Print only errors during testing
-config :logger, level: :error
+# Print warnings and errors during testing
+config :logger, level: :warning

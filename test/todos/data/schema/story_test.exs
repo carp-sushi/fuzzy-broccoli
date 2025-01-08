@@ -7,7 +7,7 @@ defmodule Todos.Data.Schema.StoryTest do
       params: %{
         name: "Test Story",
         description: "This is a test story",
-        blockchain_address: "tp#{Nanoid.generate(39)}"
+        blockchain_address: FakeData.generate_blockchain_address()
       }
     }
   end
@@ -20,7 +20,7 @@ defmodule Todos.Data.Schema.StoryTest do
     end
 
     test "it fails on missing name" do
-      params = %{blockchain_address: "tp#{Nanoid.generate(39)}"}
+      params = %{blockchain_address: FakeData.generate_blockchain_address()}
       result = Story.changeset(%Story{}, params)
       refute result.valid?
       assert result.errors[:name]
