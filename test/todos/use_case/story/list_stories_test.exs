@@ -23,9 +23,9 @@ defmodule Todos.UseCase.Story.ListStoriesTest do
       assert length(stories) == Enum.count(ctx.db, fn s -> s.blockchain_address == ctx.expect end)
     end
 
-    test "should return an error on invalid args" do
+    test "should return an error given empty args" do
       assert {:error, message} = ListStories.execute(%{})
-      assert message == "missing required args: [:blockchain_address]"
+      assert message == "missing required arg: blockchain_address"
     end
   end
 end

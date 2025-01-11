@@ -6,10 +6,11 @@ config :todos,
 
 # Base configuration (defaults)
 config :todos,
+  uri_base: "/todos/api/v1",
   network_prefix: System.get_env("NETWORK_PREFIX") || "pb",
   auth_header: "x-account-address",
   max_records: 1000,
-  uri_base: "/todos/api/v1"
+  http_port: 8080
 
 # Configure nanoid size and alphabet.
 config :nanoid,

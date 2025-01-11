@@ -4,6 +4,7 @@ defmodule Todos.Data.Repo.StoryRepo do
   """
   @behaviour Todos.Data.Keeper.StoryKeeper
 
+  alias Todos.Data.Repo.Ext, as: RepoExt
   alias Todos.Data.Schema.Story
   alias Todos.{Error, Repo}
   alias Todos.Util.Clock
@@ -26,16 +27,12 @@ defmodule Todos.Data.Repo.StoryRepo do
 
   @doc "Get a story"
   def get_story(id) do
-    Repo.one(
+    RepoExt.one(
       from(s in Story,
         where: s.id == ^id and is_nil(s.deleted_at),
         select: s
       )
     )
-    |> case do
-      nil -> {:error, "story not found: #{id}"}
-      story -> {:ok, story}
-    end
   end
 
   @doc "Get stories for a blockchain address, loaded directly as DTOs."
@@ -61,15 +58,11 @@ defmodule Todos.Data.Repo.StoryRepo do
 
   @doc "Delete a story."
   def delete_story(id) do
-    update_all(
+    RepoExt.update_all(
       from(s in Story,
         where: s.id == ^id and is_nil(s.deleted_at),
         update: [set: [deleted_at: ^Clock.now()]]
       )
     )
   end
-
-  # Helper for readability
-  defp update_all(queryable),
-    do: queryable |> Repo.update_all([])
 end

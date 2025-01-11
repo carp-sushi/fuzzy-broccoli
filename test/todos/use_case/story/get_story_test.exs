@@ -36,8 +36,7 @@ defmodule Todos.UseCase.Story.GetStoryTest do
     test "should return an error on ownership mismatch", ctx do
       args = Map.merge(ctx.args, %{blockchain_address: FakeData.generate_blockchain_address()})
       assert {:error, message, status} = GetStory.execute(args)
-      assert String.starts_with?(message, "story not found")
-      assert status == :not_found
+      assert {message, status} == {"access denied", :forbidden}
     end
   end
 end

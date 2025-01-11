@@ -4,6 +4,7 @@ defmodule Todos.Data.Repo.TaskRepo do
   """
   @behaviour Todos.Data.Keeper.TaskKeeper
 
+  alias Todos.Data.Repo.Ext, as: RepoExt
   alias Todos.Data.Schema.Task
   alias Todos.{Error, Repo}
   alias Todos.Util.Clock
@@ -26,16 +27,12 @@ defmodule Todos.Data.Repo.TaskRepo do
 
   @doc "Get a task"
   def get_task(id) do
-    Repo.one(
+    RepoExt.one(
       from(t in Task,
         where: t.id == ^id and is_nil(t.deleted_at),
         select: t
       )
     )
-    |> case do
-      nil -> {:error, "task not found: #{id}"}
-      task -> {:ok, task}
-    end
   end
 
   @doc "Get tasks for a story."
@@ -63,15 +60,11 @@ defmodule Todos.Data.Repo.TaskRepo do
 
   @doc "Delete a task."
   def delete_task(id) do
-    update_all(
+    RepoExt.update_all(
       from(t in Task,
         where: t.id == ^id and is_nil(t.deleted_at),
         update: [set: [deleted_at: ^Clock.now()]]
       )
     )
   end
-
-  # Helper for readability
-  defp update_all(queryable),
-    do: queryable |> Repo.update_all([])
 end

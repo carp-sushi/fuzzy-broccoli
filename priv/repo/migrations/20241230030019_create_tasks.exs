@@ -11,5 +11,6 @@ defmodule Todos.Repo.Migrations.CreateTasks do
       timestamps()
     end
     create index(:tasks, [:story_id])
+    create constraint(:tasks, :task_name_length, check: "char_length(name) <= 100")
   end
 end

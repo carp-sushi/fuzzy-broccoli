@@ -11,5 +11,7 @@ defmodule Todos.Repo.Migrations.CreateStories do
       timestamps()
     end
     create index(:stories, [:blockchain_address])
+    create constraint(:stories, :story_name_length, check: "char_length(name) <= 100")
+    create constraint(:stories, :story_description_length, check: "char_length(description) <= 1000")
   end
 end

@@ -2,6 +2,12 @@ defmodule Todos.Http.Response do
   @moduledoc "HTTP response helper."
   import Plug.Conn
 
+  if Mix.env() == :dev do
+    @pretty true
+  else
+    @pretty false
+  end
+
   @doc "No content success helper."
   def no_content(conn) do
     send_resp(conn, 204, "")
@@ -29,6 +35,6 @@ defmodule Todos.Http.Response do
   def send_json(conn, data, status \\ 200) do
     conn
     |> put_resp_content_type("application/json")
-    |> send_resp(status, Poison.encode!(data))
+    |> send_resp(status, Poison.encode!(data, pretty: @pretty))
   end
 end

@@ -7,9 +7,15 @@ defmodule Todos.UseCase.Story.ListStories do
 
   @behaviour Todos.UseCase
   def execute(args) do
-    Args.validate(args, [:blockchain_address], fn ->
-      stories = story_keeper().list_stories(args.blockchain_address)
-      {:ok, %{stories: stories}}
-    end)
+    case Args.get(args, :blockchain_address) do
+      {:ok, blockchain_address} -> list_stories(blockchain_address)
+      error -> error
+    end
+  end
+
+  # list stories logic
+  defp list_stories(blockchain_address) do
+    stories = story_keeper().list_stories(blockchain_address)
+    {:ok, %{stories: stories}}
   end
 end

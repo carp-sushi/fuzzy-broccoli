@@ -16,21 +16,28 @@ defmodule Todos.UseCase.Task.GetTask do
     end
   end
 
-  # Get task
+  # check for required args and get task under story.
   defp get_task(args) do
-    Args.validate(args, [:task_id], fn ->
-      case task_keeper().get_task(args.task_id) do
-        {:ok, task} -> verify_story(task, args.story_id)
-        {:error, error} -> {:error, error, :not_found}
-      end
-    end)
+    case Args.take(args, [:task_id, :story_id]) do
+      {:ok, task_id, story_id} -> get_task(task_id, story_id)
+      error -> error
+    end
   end
 
-  # Ensure the task return from the keeper belongs to the given story.
+  # get task
+  defp get_task(task_id, story_id) do
+    case task_keeper().get_task(task_id) do
+      {:ok, task} -> verify_story(task, story_id)
+      {:error, message} -> {:error, "#{message}: #{task_id}", :not_found}
+    end
+  end
+
+  # Verify the task return from the keeper belongs to the given story.
   defp verify_story(task, story_id) do
-    case task.story_id == story_id do
-      true -> {:ok, %{task: Dto.from_schema(task)}}
-      false -> {:error, "task not found: #{task.id}", :not_found}
+    if task.story_id == story_id do
+      {:ok, %{task: Dto.from_schema(task)}}
+    else
+      {:error, "access denied", :forbidden}
     end
   end
 end

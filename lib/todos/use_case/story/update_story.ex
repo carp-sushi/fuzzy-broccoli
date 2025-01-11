@@ -11,16 +11,16 @@ defmodule Todos.UseCase.Story.UpdateStory do
   @behaviour Todos.UseCase
   def execute(args) do
     case GetStory.execute(args) do
-      {:ok, %{story: story}} -> args |> unpack_updates(story) |> update_story(story)
+      {:ok, %{story: story}} -> args |> get_updates(story) |> update_story(story)
       error -> error
     end
   end
 
-  # Unpack any updates, falling back to existing values.
-  defp unpack_updates(args, story),
+  # Get any provided updates, falling back to existing values.
+  defp get_updates(args, story),
     do: %{
       name: Map.get(args, :name) || story.name,
-      description: Map.get(args, :description) || story.description
+      description: Map.get(args, :description, story.description)
     }
 
   # Performs the story update.

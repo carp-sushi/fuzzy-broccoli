@@ -9,19 +9,26 @@ defmodule Todos.UseCase.Story.GetStory do
 
   @behaviour Todos.UseCase
   def execute(args) do
-    Args.validate(args, [:story_id, :blockchain_address], fn ->
-      case story_keeper().get_story(args.story_id) do
-        {:error, error} -> {:error, error, :not_found}
-        {:ok, story} -> verify_ownership(story, args.blockchain_address)
-      end
-    end)
+    case Args.take(args, [:story_id, :blockchain_address]) do
+      {:ok, story_id, blockchain_address} -> get_story(story_id, blockchain_address)
+      error -> error
+    end
   end
 
-  # Ensure the story return from the keeper is owned by the requestor.
+  # Get story from keeper
+  defp get_story(story_id, blockchain_address) do
+    case story_keeper().get_story(story_id) do
+      {:ok, story} -> verify_ownership(story, blockchain_address)
+      {:error, message} -> {:error, "#{message}: #{story_id}", :not_found}
+    end
+  end
+
+  # Ensure the story returned from the keeper is owned by the requestor.
   defp verify_ownership(story, blockchain_address) do
-    case story.blockchain_address == blockchain_address do
-      true -> {:ok, %{story: Dto.from_schema(story)}}
-      false -> {:error, "story not found: #{story.id}", :not_found}
+    if story.blockchain_address == blockchain_address do
+      {:ok, %{story: Dto.from_schema(story)}}
+    else
+      {:error, "access denied", :forbidden}
     end
   end
 end

@@ -11,13 +11,13 @@ defmodule Todos.UseCase.Task.UpdateTask do
   @behaviour Todos.UseCase
   def execute(args) do
     case GetTask.execute(args) do
-      {:ok, %{task: task}} -> args |> unpack_updates(task) |> update_task(task)
+      {:ok, %{task: task}} -> args |> get_updates(task) |> update_task(task)
       error -> error
     end
   end
 
-  # Unpack any updates, falling back to existing values.
-  defp unpack_updates(args, task),
+  # Get any provided updates, falling back to existing values.
+  defp get_updates(args, task),
     do: %{
       name: Map.get(args, :name) || task.name,
       status: Map.get(args, :status) || task.status

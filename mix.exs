@@ -21,6 +21,7 @@ defmodule Todos.MixProject do
           StoryUtil,
           TaskUtil,
           TestUtil,
+          Todos.Data.Repo.Ext,
           Todos.Util.Clock
         ]
       ]
@@ -40,7 +41,7 @@ defmodule Todos.MixProject do
     [
       {:ecto_identifier, "~> 0.2.0"},
       {:ecto_sql, "~> 3.9.2"},
-      {:plug_cowboy, "~> 2.6.1"},
+      {:plug_cowboy, "~> 2.7.2"},
       {:poison, "~> 6.0.0"},
       {:postgrex, "~> 0.16.5"},
       {:hammox, "~> 0.7", only: :test},
